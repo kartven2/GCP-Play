@@ -61,7 +61,7 @@ spec:
                     # If running on a VPC, the Cloud SQL proxy can connect via Private IP. See:
                     # https://cloud.google.com/sql/docs/mysql/private-ip for more info.
                     # "-ip_address_types=PRIVATE",
-                    "-credential_file=/secrets/cloudsql/computetosql.json"]
+                    "-credential_file=/secrets/cloudsql/serviceaccount.json"]
           # [START cloudsql_security_context]
           securityContext:
             runAsUser: 1  # non-root user
