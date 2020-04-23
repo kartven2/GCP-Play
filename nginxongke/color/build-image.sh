@@ -12,5 +12,6 @@
 #See the License for the specific language governing permissions and
 #limitations under the License.
 #!/bin/bash
+mvn clean package
 docker build -t color:1.0 .
 docker run --publish 8080:32345 --detach --name color-container color:1.0

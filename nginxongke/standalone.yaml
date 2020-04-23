@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: red
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: red
+  template:
+    metadata:
+      labels:
+        app: red
+    spec:
+      containers:
+      - name: red
+        image: gcr.io/{project-id}/color:latest
+        ports:
+        - containerPort: 32345
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: red-svc
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 32345
+    protocol: TCP
+    name: http
+  selector:
+    app: red
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: green
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: green
+  template:
+    metadata:
+      labels:
+        app: green
+    spec:
+      containers:
+      - name: green
+        image: gcr.io/{project-id}/color:latest
+        ports:
+        - containerPort: 32345
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: green-svc
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 90
+    targetPort: 32345
+    protocol: TCP
+    name: http
+  selector:
+    app: green
