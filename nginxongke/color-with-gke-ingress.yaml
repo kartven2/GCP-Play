@@ -20,15 +20,16 @@
 #gcloud container clusters get-credentials m5
 
 #Apply the workload on the cluster
-#kubectl apply -f standalone.yaml 
+#kubectl apply -f color-with-gke-ingress.yaml 
 
-#Create two color services
+#Create three color services
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: red
+  namespace: default
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: red
@@ -40,20 +41,22 @@ spec:
       containers:
       - name: red
         image: gcr.io/${project-id}/color:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 32345
+          protocol: TCP
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: red-svc
+  namespace: default
 spec:
-  type: LoadBalancer
+  type: NodePort
   ports:
   - port: 80
     targetPort: 32345
     protocol: TCP
-    name: http
   selector:
     app: red
 ---
@@ -61,8 +64,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: green
+  namespace: default
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: green
@@ -74,19 +78,83 @@ spec:
       containers:
       - name: green
         image: gcr.io/${project-id}/color:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 32345
+          protocol: TCP
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: green-svc
+  namespace: default
 spec:
-  type: LoadBalancer
+  type: NodePort
   ports:
   - port: 90
     targetPort: 32345
     protocol: TCP
-    name: http
   selector:
     app: green
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blue
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: blue
+  template:
+    metadata:
+      labels:
+        app: blue
+    spec:
+      containers:
+      - name: blue
+        image: gcr.io/${project-id}/color:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 32345
+          protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: blue-svc
+  namespace: default
+spec:
+  type: NodePort
+  ports:
+  - port: 70
+    targetPort: 32345
+    protocol: TCP
+  selector:
+    app: blue
+---
+#Create an Ingress resource for the app
+# Blue svc handles all requests
+# Red svc handles /color/red requests
+# Green svc handles /color/green requests
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: color-ingress
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /*
+        backend:
+          serviceName: blue-svc
+          servicePort: 70
+      - path: /color/red
+        backend:
+          serviceName: red-svc
+          servicePort: 80
+      - path: /color/green
+        backend:
+          serviceName: green-svc
+          servicePort: 90

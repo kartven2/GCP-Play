@@ -34,6 +34,11 @@ public class ColorController {
 	@Autowired
 	private ColorRepository colorRepo;
 
+	@GetMapping("/")
+	public String health() {
+		return "health";
+	}
+	
 	@GetMapping("/color/{name}")
 	public String getColor(@PathVariable(value = "name") String name, Model model) {
 		final Color color = colorRepo.getColorByName(name);

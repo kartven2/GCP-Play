@@ -15,3 +15,4 @@
 mvn clean package
 docker build -t color:1.0 .
 docker run --publish 8080:32345 --detach --name color-container color:1.0
+#gcloud builds submit --tag gcr.io/${project-id}/color
