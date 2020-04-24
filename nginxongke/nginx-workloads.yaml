@@ -2,12 +2,12 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: nginx-ingress 
+  name: nginx-ingress
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: nginx-ingress 
+  name: nginx-ingress
   namespace: nginx-ingress
 ---
 #Create a cluster role and cluster role binding for the service account
@@ -151,6 +151,7 @@ spec:
     - vsr
 ---
 #Create NGINX Ingress controller deployment
+#Use a Deployment. When you run the Ingress Controller by using a Deployment, by default, Kubernetes will create one Ingress controller pod.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -199,7 +200,7 @@ spec:
               fieldPath: metadata.name
         args:
           - -nginx-configmaps=$(POD_NAMESPACE)/nginx-config
-         #- -default-server-tls-secret=$(POD_NAMESPACE)/default-server-secret
+          - -default-server-tls-secret=$(POD_NAMESPACE)/default-server-secret
          #- -v=3 # Enables extensive logging. Useful for troubleshooting.
          #- -report-ingress-status
          #- -external-service=nginx-ingress
@@ -226,71 +227,3 @@ spec:
   #  name: https
   selector:
     app: nginx-ingress
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: red
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: red
-  template:
-    metadata:
-      labels:
-        app: red
-    spec:
-      containers:
-      - name: red
-        image: gcr.io/test-project-271500/color:latest
-        ports:
-        - containerPort: 32345
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: red-svc
-spec:
-  type: ClusterIP
-  ports:
-  - port: 80
-    targetPort: 32345
-    protocol: TCP
-    name: http
-  selector:
-    app: red
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: green
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: green
-  template:
-    metadata:
-      labels:
-        app: green
-    spec:
-      containers:
-      - name: green
-        image: gcr.io/test-project-271500/color:latest
-        ports:
-        - containerPort: 32345
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: green-svc
-spec:
-  type: ClusterIP
-  ports:
-  - port: 90
-    targetPort: 32345
-    protocol: TCP
-    name: http
-  selector:
-    app: green
