@@ -7,7 +7,10 @@ Cloud projects
 3. nginxongke - Color App using spring boot to demonstrate use of different deployments in GCloud Kubernetes Engine
    
    a. color - Spring Boot java App
+   
    b. standalone.yaml - Deployment of two services in GCloud Kubernetes Engine (GKE)
+   
    c. color-with-gke-ingress.yaml - Deployment of three services in GKE 
                                     with Ingress path based external Load Balancer.
+                                    
    d. nginx-workloads.yaml - Production ready NGINX ingress Load Balancer Workloads.                                 
