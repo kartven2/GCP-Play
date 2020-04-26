@@ -1,0 +1,137 @@
+#------------------------------------------------------------------------
+#Copyright [2020] Karthik.V
+#
+#Licensed under the Apache License, Version 2.0 (the "License");
+#you may not use this file except in compliance with the License.
+#You may obtain a copy of the License at
+
+#    http://www.apache.org/licenses/LICENSE-2.0
+
+#Unless required by applicable law or agreed to in writing, software
+#distributed under the License is distributed on an "AS IS" BASIS,
+#WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#See the License for the specific language governing permissions and
+#limitations under the License.
+#------------------------------------------------------------------------
+#Create a cluster in gcloud
+#gcloud container clusters create m5 --num-nodes=2
+
+#Configure kubectl with cluster credentials
+#gcloud container clusters get-credentials m5
+
+#Install helm on local system
+#curl -o get_helm.sh https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get
+#chmod +x get_helm.sh
+#./get_helm.sh
+
+#Service account for tiller
+#kubectl create serviceaccount --namespace kube-system tiller
+
+#Create cluster Role binding
+#kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
+
+#Install tiller on the cluster
+#helm init --service-account tiller
+#Without RBAC
+#helm init
+
+#Install Nginx ingress controller
+#helm install --name nginx-ingress stable/nginx-ingress
+
+#Apply the workload on the cluster
+#kubectl apply -f color-with-nginx-workloads.yaml 
+
+#Create two color services
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: red
+  namespace: default  
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: red
+  template:
+    metadata:
+      labels:
+        app: red
+    spec:
+      containers:
+      - name: red
+        image: gcr.io/${project-id}/color:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 32345
+          protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: red-svc
+  namespace: default  
+spec:
+  type: NodePort
+  ports:
+  - port: 70
+    targetPort: 32345
+    protocol: TCP
+  selector:
+    app: red
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: green
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: green
+  template:
+    metadata:
+      labels:
+        app: green
+    spec:
+      containers:
+      - name: green
+        image: gcr.io/${project-id}/color:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 32345
+          protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: green-svc
+  namespace: default
+spec:
+  type: NodePort
+  ports:
+  - port: 90
+    targetPort: 32345
+    protocol: TCP
+  selector:
+    app: green
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-resource
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        backend:
+          serviceName: red-svc
+          servicePort: 70
+      - path: /color/green
+        backend:
+          serviceName: green-svc
+          servicePort: 90
