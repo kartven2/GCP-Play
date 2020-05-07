@@ -17,3 +17,14 @@ Cloud projects
    
    e. color-with-nginx-workloads.yaml - Deployment of two services in GKE
                                         with NGINX as the LB (path based external HTTP load balancer)
+4. redis - Visitor application to demonstrate 
+
+   a. App engine Java 11 flex deployment on Gcloud
+   
+   b. Fragmented Layout with Spring Thymeleaf
+   
+   c. Some jQuery hacks
+   
+   <Open Item/Issue> : With GAE Java 11 and Redis memory store in Gcloud 
+   redis.clients.jedis.JedisPool couldn't be configured with org.springframework.data.redis.core.RedisTemplate
+           
