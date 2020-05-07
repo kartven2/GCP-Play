@@ -11,6 +11,9 @@ Cloud projects
    b. standalone.yaml - Deployment of two services in GCloud Kubernetes Engine (GKE)
    
    c. color-with-gke-ingress.yaml - Deployment of three services in GKE 
-                                    with Ingress path based external Load Balancer.
+                                    with GCloud Ingress (path based external load balancer)
                                     
-   d. nginx-workloads.yaml - Production ready NGINX ingress Load Balancer Workloads.                                 
+   d. nginx-workloads.yaml - Production ready NGINX ingress Load Balancer Workloads.
+   
+   e. color-with-nginx-workloads.yaml - Deployment of two services in GKE
+                                        with NGINX as the LB (path based external HTTP load balancer)
