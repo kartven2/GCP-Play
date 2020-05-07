@@ -1,0 +1,126 @@
+<!-- 
+Copyright [2020] Karthik.V
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<!DOCTYPE html>
+<html lang='en' xmlns:th='http://www.thymeleaf.org'>
+<head th:fragment="baseHead" th:with="ttl=${ttl}">
+<title th:text="${ttl}"></title>
+<meta charset='utf-8'>
+<meta name='viewport'
+	content='width=device-width, initial-scale=1, shrink-to-fit=no'>
+<link rel='stylesheet'
+	href='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css'>
+<script src="https://code.jquery.com/jquery-3.5.0.js"
+	integrity="sha256-r/AaFHrszJtwpe+tHyNi/XCfMxYpbsRg2Uqn0x3s2zc="
+	crossorigin="anonymous"></script>
+<script
+	src='https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js'></script>
+<script
+	src='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js'></script>
+</head>
+<body>
+	<header th:fragment='header'>
+		<nav class="navbar navbar-expand-lg navbar-light bg-light">
+			<a class="navbar-brand" href="/visitor"> <img
+				th:src="@{images/visitor.png}" width="30" height="30" alt="">
+			</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse"
+				data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup"
+				aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+				<div class="navbar-nav">
+					<a class="nav-item nav-link active" href="/visitor">Home <span
+						class="sr-only">(current)</span></a> <a class="nav-item nav-link"
+						href="/">Health</a> <a class="nav-item nav-link" href="/register">Register</a>
+						<a class="nav-item nav-link" href="/tconnect">Test Connection</a>
+				</div>
+			</div>
+		</nav>
+	</header>
+	<div class='container' th:fragment='home'>
+		<form id='introForm'
+			action='javascript:visit(document.getElementById("vid").value)'>
+			<div class='form-group'>
+				<label for='txt1'>Enter Visitor ID:</label>
+				<div class='col-sm-4'>
+					<input id='vid' type='text' class='form-control' name='vid' />
+				</div>
+			</div>
+			<div>
+				<button id='btn1' type='submit' class='btn btn-primary'>Details</button>
+			</div>
+		</form>
+	</div>
+	<div class='container alert alert-danger' role='alert'
+		th:fragment='genericerr' th:with='errmsg=${errmsg}'>
+		<p th:text='${errmsg}' />
+	</div>
+	<div class='container alert alert-success' role='alert'
+		th:fragment='tconnect' th:with='result=${result}'>
+		<p th:text='${result}' />
+	</div>
+	<div class='container alert alert-success' role='alert'
+		th:fragment='health'>
+		<h1>
+			<div id='clock' />
+		</h1>
+	</div>
+	<div class='container' th:fragment='register'>
+		<form id='registerForm'
+			action='javascript:register(document.getElementById("vname").value)'>
+			<div class='form-group'>
+				<label for='txt1'>Enter Name:</label>
+				<div class='col-sm-4'>
+					<input id='vname' type='text' class='form-control' name='vname' />
+				</div>
+			</div>
+			<div>
+				<button id='btn1' type='submit' class='btn btn-primary'>Register</button>
+			</div>
+		</form>
+	</div>
+	<div class='container' th:fragment='info'
+		th:with='vid=${vid},vname=${vname},vcount=${vcount}' )>
+		<table class="table">
+			<thead>
+				<tr>
+					<th scope="col">#</th>
+					<th scope="col">Visitor ID</th>
+					<th scope="col">Visitor Name</th>
+					<th scope="col">Visit Count</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<th scope="row">1</th>
+					<td><span th:text='${vid}'>Visitor ID</span></td>
+					<td><span th:text='${vname}'>Visitor Name</span></td>
+					<td><span th:text='${vcount}'>Visit Count</span></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<footer th:fragment='footer' th:with="year=${year}"
+		class="page-footer font-small blue">
+		<script type='text/javascript' th:src='@{js/app.js}'></script>
+		<p>
+			&copy; <span class="footer-copyright text-center py-3"
+				th:text="${year}"></span> Author: Karthik V
+		</p>
+	</footer>
+</body>
+</html>
