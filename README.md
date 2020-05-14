@@ -28,3 +28,4 @@ Cloud projects
    <Open Item/Issue> : With GAE Java 11 and Redis memory store in Gcloud 
    redis.clients.jedis.JedisPool couldn't be configured with org.springframework.data.redis.core.RedisTemplate
            
+5. CloudSpanner - University Application using GCloud Cloud Spanner
