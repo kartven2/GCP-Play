@@ -29,3 +29,13 @@ Cloud projects
    redis.clients.jedis.JedisPool couldn't be configured with org.springframework.data.redis.core.RedisTemplate
            
 5. CloudSpanner - University Application using GCloud Cloud Spanner
+
+6. Events application using GCP Pub/Sub, GAE flex and Datastore
+    
+     - Allows users to create events and publish to eventsTopic
+    
+     - Pull subscriber is configured in GCP Pub/Sub to consume events
+    
+     - Use Datastore to persist events with details
+    
+     - Allows users to close the events
