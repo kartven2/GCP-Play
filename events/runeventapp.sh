@@ -19,6 +19,6 @@ gcloud pubsub topics create EventsTopic
 gcloud pubsub subscriptions create EventsSubscription \
     --topic EventsTopic \
     --push-endpoint \
-    https://half-life-277322.ue.r.appspot.com/events/subscriber?reqToken=8r0teb6778939sfbe07nn0mm271 \
+    https://${PROJECT_ID}.${REGION_ID}.r.appspot.com/events/subscriber?reqToken=8r0teb6778939sfbe07nn0mm271 \
     --ack-deadline 10
 mvn clean package appengine:deploy
