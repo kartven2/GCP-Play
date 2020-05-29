@@ -1,0 +1,143 @@
+<!-- 
+Copyright [2020] Karthik.V
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<!DOCTYPE html>
+<html lang='en' xmlns:th='http://www.thymeleaf.org'>
+<head th:fragment="baseHead" th:with="ttl=${ttl}">
+<title th:text="${ttl}"></title>
+<meta charset='utf-8'>
+<meta name='viewport'
+	content='width=device-width, initial-scale=1, shrink-to-fit=no'>
+<link rel='stylesheet'
+	href='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css'>
+<script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+<script
+	src='https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js'></script>
+<script
+	src='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js'></script>
+</head>
+<body>
+	<header th:fragment='header'>
+		<nav class="navbar navbar-expand-lg navbar-light bg-light">
+			<a class="navbar-brand" href="/events/home"> <img
+				th:src="@{/img/events.png}" width="30" height="30" alt="">
+			</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse"
+				data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup"
+				aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+				<div class="navbar-nav">
+					<a class="nav-item nav-link active" href="/events/home">Home<span
+						class="sr-only">(current)</span></a> <a class="nav-item nav-link"
+						href="/events/health">Health</a><a class="nav-item nav-link"
+						href="/events/list">Events</a><a class="nav-item nav-link"
+						href="/events/close">Close Events</a>
+				</div>
+			</div>
+		</nav>
+	</header>
+	<div class='container' th:fragment='home'>
+		<form id='introForm'
+			action='javascript:send(document.getElementById("name").value, document.getElementById("details").value, document.getElementById("description").value)'>
+			<div class='form-group'>
+				<label for='txt1'>Event Name:</label>
+				<div class='col-sm-4'>
+					<input id='name' type='text' class='form-control' name='name' />
+				</div>
+				<label for='txt1'>Event Details:</label>
+				<div class='col-sm-4'>
+					<input id='details' type='text' class='form-control' name='details' />
+				</div>
+				<label for='txt1'>Event Description:</label>
+				<div class='col-sm-4'>
+					<input id='description' type='text' class='form-control'
+						name='description' />
+				</div>
+			</div>
+			<div>
+				<button id='btn1' type='submit' class='btn btn-primary'>Send</button>
+			</div>
+		</form>
+	</div>
+	<div class='container' th:fragment='closeEvent'>
+		<form id='closeEventForm'
+			action='javascript:closeEvent(document.getElementById("eid").value)'>
+			<div class='form-group'>
+				<label for='txt1'>Event ID:</label>
+				<div class='col-sm-4'>
+					<input id='eid' type='text' class='form-control' name='eid' />
+				</div>
+			</div>
+			<div>
+				<button id='btn1' type='submit' class='btn btn-primary'>Close
+					Event</button>
+			</div>
+		</form>
+	</div>
+	<div class='container alert alert-danger' role='alert'
+		th:fragment='genericerr' th:with='errmsg=${errmsg}'>
+		<p th:text='${errmsg}' />
+	</div>
+	<div class='container alert alert-success' role='alert'
+		th:fragment='eventsent' th:with='result=${result}'>
+		<p th:text='${result}' />
+	</div>
+	<div class='container alert alert-success' role='alert'
+		th:fragment='health'>
+		<h1>
+			<div id='clock' />
+		</h1>
+	</div>
+	<div class='container' th:fragment='info' th:with='events=${events}'>
+		<table class="table">
+			<thead>
+				<tr>
+					<th scope="col">Event ID</th>
+					<th scope="col">Event Name</th>
+					<th scope="col">Event Detail</th>
+					<th scope="col">Event Description</th>
+					<th scope="col">Event Start Time</th>
+					<th scope="col">Event End Time</th>
+					<th scope="col">Event Open</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:if="${events.empty}">
+					<td colspan="7">No Events Available</td>
+				</tr>
+				<tr th:each="e : ${events}">
+					<td><span th:text='${e?.id}'>Event ID</span></td>
+					<td><span th:text='${e?.name}'>Event Name</span></td>
+					<td><span th:text='${e?.details}'>Event Detail</span></td>
+					<td><span th:text='${e?.description}'>Event Description</span></td>
+					<td><span th:text='${e?.startTime}'>Event Start Time</span></td>
+					<td><span th:text='${e?.endTime}'>Event End Time</span></td>
+					<td><span th:text='${e?.open}'>Event Open</span></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<footer th:fragment='footer' th:with="year=${year}"
+		class="page-footer font-small blue">
+		<script type='text/javascript' th:src='@{/js/app.js}'></script>
+		<p>
+			&copy; <span class="footer-copyright text-center py-3"
+				th:text="${year}"></span> Author: Karthik V
+		</p>
+	</footer>
+</body>
+</html>
